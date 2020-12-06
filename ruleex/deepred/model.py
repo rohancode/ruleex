@@ -52,10 +52,19 @@ class DeepRedFCNet(FCNet):
         with tf.name_scope("FC_net"):
             flowing_x = self.x_for_eval
             self.layers = [flowing_x]
-            for i in range(len(self.weights[0])):
+
+            c=0
+            for i in range(3):
                 with tf.name_scope("layer_{}".format(i)):
-                    W = tf.constant(self.weights[0][i], name="Weights_{}".format(i))
-                    b = tf.constant(self.weights[1][i], name="Biases_{}".format(i))
+                    W = tf.constant(self.weights[c], name="Weights_{}".format(i))
+                    c=c+1
+                    b = tf.constant(self.weights[c], name="Biases_{}".format(i))
+                    c=c+1
+
+            # for i in range(len(self.weights[0])):
+            #     with tf.name_scope("layer_{}".format(i)):
+            #         W = tf.constant(self.weights[0][i], name="Weights_{}".format(i))
+            #         b = tf.constant(self.weights[1][i], name="Biases_{}".format(i))
                     flowing_x = self.activation_function(tf.nn.xw_plus_b(flowing_x, W, b))
                     self.layers.append(flowing_x)
             y = flowing_x
@@ -162,4 +171,3 @@ class DeepRedTextCNN(TextCNN):
 
     def name(self):
         return "TextCNN_for_deepred_{}".format("-".join([str(ls) for ls in self.layer_sizes]))
-
